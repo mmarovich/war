@@ -29,20 +29,40 @@ $(document).ready(function(){
 		getDataFromApi(state.urls.shuffle, function(data){
 			state.cards.id = data.deck_id;
 			state.urls.draw = 'https://deckofcardsapi.com/api/deck/' + state.cards.id + '/draw/?count=26';	
-		drawToPile();
-		drawToPile();
+		drawToPile1();
+		drawToPile2();
 		$('.shuffle').addClass('hidden');
 		$('.attack').removeClass('hidden');
 		});
-		function drawToPile(){
+		function drawToPile1(){
 			getDataFromApi(state.urls.draw, function(data){
 				state.urls.pile1 = 'https://deckofcardsapi.com/api/deck/' + 
-				state.cards.id + '/pile/pile_1/add/';
+				state.cards.id + '/pile/pile_1/add/?cards=' + data.cards[0].code + ',' + data.cards[1].code + 
+				',' + data.cards[2].code + ',' + data.cards[3].code + ',' + data.cards[4].code + ',' + data.cards[5].code +
+				',' + data.cards[6].code + ',' + data.cards[7].code + ',' + data.cards[8].code + ',' + data.cards[9].code + 
+				',' + data.cards[10].code + ',' + data.cards[11].code + ',' + data.cards[12].code + ',' + data.cards[13].code + 
+				',' + data.cards[14].code + ',' + data.cards[15].code + ',' + data.cards[16].code + ',' + data.cards[17].code + 
+				',' + data.cards[18].code + ',' + data.cards[19].code + ',' + data.cards[20].code + ',' + data.cards[21].code + 
+				',' + data.cards[22].code + ',' + data.cards[23].code + ',' + data.cards[24].code + ',' + data.cards[25].code;
 				getDataFromApi(state.urls.pile1, function(data){
-					state.cards.pile1 = data.cards;
-					console.log(state.cards.pile1);
+					console.log(data.cards);
+					})
 				})
-			})
+			}
+		function drawToPile2(){
+			getDataFromApi(state.urls.draw, function(data){
+				state.urls.pile2 = 'https://deckofcardsapi.com/api/deck/' + 
+				state.cards.id + '/pile/pile_2/add/?cards=' + data.cards[0].code + ',' + data.cards[1].code + 
+				',' + data.cards[2].code + ',' + data.cards[3].code + ',' + data.cards[4].code + ',' + data.cards[5].code +
+				',' + data.cards[6].code + ',' + data.cards[7].code + ',' + data.cards[8].code + ',' + data.cards[9].code + 
+				',' + data.cards[10].code + ',' + data.cards[11].code + ',' + data.cards[12].code + ',' + data.cards[13].code + 
+				',' + data.cards[14].code + ',' + data.cards[15].code + ',' + data.cards[16].code + ',' + data.cards[17].code + 
+				',' + data.cards[18].code + ',' + data.cards[19].code + ',' + data.cards[20].code + ',' + data.cards[21].code + 
+				',' + data.cards[22].code + ',' + data.cards[23].code + ',' + data.cards[24].code + ',' + data.cards[25].code;
+				getDataFromApi(state.urls.pile2, function(data){
+					console.log(data.cards);
+				})
+			});
 		}
 	});
 });
