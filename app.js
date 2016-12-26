@@ -29,8 +29,6 @@ $(document).ready(function(){
 		getDataFromApi(state.urls.shuffle, function(data){
 			state.cards.id = data.deck_id;
 			state.urls.draw = 'https://deckofcardsapi.com/api/deck/' + state.cards.id + '/draw/?count=26';	
-			state.urls.pile2 = 'https://deckofcardsapi.com/api/deck/' + 
-			state.cards.id + '/pile/pile_2/add/';
 		drawToPile();
 		drawToPile();
 		$('.shuffle').addClass('hidden');
