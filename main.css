@@ -2,6 +2,31 @@
   box-sizing: border-box;
 }
 
+body {
+	text-align: auto;
+}
+
+.startDeck {
+	text-align: center;
+	padding-top: 50%;
+	height: 100%;
+	width: 100%;
+}
+
+.startDeck div {
+	text-align: auto;
+	position: absolute;
+	height: 100%;
+	width: 100%;
+}
+
 .hidden {
 	display: none;
+}
+
+.card img {
+	height: 160px;
+	width: 100px;
+	border: 1px solid gray;
+	position: absolute;
 }
