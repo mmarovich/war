@@ -47,7 +47,7 @@ $(document).ready(function(){
 					return card.code;
 				}).join();
 				data.cards.forEach(function(item, index){
-					$('.startDeck').append('<div class="card"><img class="card" src="image/card back red.png" style="z-index:' + index + 
+					$('.startDeck').append('<div class="card"><img class="card" src="image/card back red.png" style="z-index:' + (index + 100) + 
 						'; margin-left:' + (index / 2) + 'px; margin-bottom:' + (index / 2) + 'px"></div>');
 				})
 				state.urls.pile1 = 'https://deckofcardsapi.com/api/deck/' + 
@@ -102,17 +102,17 @@ $(document).ready(function(){
 			}
 			state.cards.currentCard2 = data.cards[0].code;
 			console.log(state.cards.currentVal2);
+			state.urls.discard1 = 'https://deckofcardsapi.com/api/deck/' + state.cards.id + '/pile/discard_1/add/?cards=' + state.cards.currentCard1 + ',' + state.cards.currentCard2;
+			state.urls.discard2 = 'https://deckofcardsapi.com/api/deck/' + state.cards.id + '/pile/discard_2/add/?cards=' + state.cards.currentCard1 + ',' + state.cards.currentCard2;
+			if (state.cards.currentVal1 > state.cards.currentVal2){
+				getDataFromApi(state.urls.discard1, function(data){
+					console.log(data);
+				})
+			} else if (state.cards.currentVal1 < state.cards.currentVal2) {
+				getDataFromApi(state.urls.discard2, function(data){
+					console.log(data)
+				})
+			}			
 		})
-		state.urls.discard1 = 'https://deckofcardsapi.com/api/deck/' + state.cards.id + '/pile/discard_1/add/?cards=' + state.cards.currentCard1 + ',' + state.cards.currentCard2;
-		state.urls.discard2 = 'https://deckofcardsapi.com/api/deck/' + state.cards.id + '/pile/discard_2/add/?cards=' + state.cards.currentCard1 + ',' + state.cards.currentCard2;
-		if (state.cards.currentVal1 > state.cards.currentVal2){
-			getDataFromApi(state.urls.discard1, function(data){
-				console.log(data);
-			})
-		} else if (state.cards.currentVal1 < state.cards.currentVal2) {
-			getDataFromApi(state.urls.discard2, function(data){
-				console.log(data)
-			})
-		}
 	})
 });
