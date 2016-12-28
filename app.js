@@ -104,12 +104,27 @@ $(document).ready(function(){
 			console.log(state.cards.currentVal2);
 			state.urls.discard1 = 'https://deckofcardsapi.com/api/deck/' + state.cards.id + '/pile/discard_1/add/?cards=' + state.cards.currentCard1 + ',' + state.cards.currentCard2;
 			state.urls.discard2 = 'https://deckofcardsapi.com/api/deck/' + state.cards.id + '/pile/discard_2/add/?cards=' + state.cards.currentCard1 + ',' + state.cards.currentCard2;
+			state.urls.war1 = 'https://deckofcardsapi.com/api/deck/' + state.cards.id + '/pile/pile_1/draw/';
+			state.urls.war2 = 'https://deckofcardsapi.com/api/deck/' + state.cards.id + '/pile/pile_2/draw/';
 			if (state.cards.currentVal1 > state.cards.currentVal2){
 				getDataFromApi(state.urls.discard1, function(data){
 					console.log(data);
 				})
 			} else if (state.cards.currentVal1 < state.cards.currentVal2) {
 				getDataFromApi(state.urls.discard2, function(data){
+					console.log(data)
+				})
+			} else {
+				getDataFromApi(state.urls.war1, function(data){
+					console.log(data)
+				})
+				getDataFromApi(state.urls.war1, function(data){
+					console.log(data)
+				})
+				getDataFromApi(state.urls.war2, function(data){
+					console.log(data)
+				})
+				getDataFromApi(state.urls.war2, function(data){
 					console.log(data)
 				})
 			}			
