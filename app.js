@@ -14,6 +14,10 @@ state = {
 	urls: {
 		shuffle: 'https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1',
 		draw: '',
+		drawIt1: '',
+		drawIt2: '',
+		discardIt1: '',
+		discardIt2: '',
 		pile1: '',
 		pile2: '',
 		attack1: '',
@@ -55,6 +59,10 @@ $(document).ready(function(){
 		drawToPile2();
 		$('.shuffle').addClass('hidden');
 		$('.attack').removeClass('hidden');
+		state.urls.drawIt1 = "pile_1";
+		state.urls.drawIt2 = "pile_2";
+		state.urls.discardIt1 = "discard_1";
+		state.urls.discardIt2 = "discard_2";
 		});
 		function drawToPile1(){
 			getDataFromApi(state.urls.draw, function(data){
@@ -91,41 +99,83 @@ $(document).ready(function(){
 		}
 	});
 	$('.attack').click(function(e){
-		state.urls.attack1 = 'https://deckofcardsapi.com/api/deck/' + state.cards.id + '/pile/pile_1/draw/';
-		state.urls.attack2 = 'https://deckofcardsapi.com/api/deck/' + state.cards.id + '/pile/pile_2/draw/';
+		state.urls.attack1 = 'https://deckofcardsapi.com/api/deck/' + state.cards.id + '/pile/' + state.urls.drawIt1 + '/draw/';
+		state.urls.attack2 = 'https://deckofcardsapi.com/api/deck/' + state.cards.id + '/pile/' + state.urls.drawIt2 + '/draw/';
 		getDataFromApi(state.urls.attack1, function(data){
 			state.cards.currentVal1 = cardValue(data.cards[0].value);
 			state.cards.currentCard1 = data.cards[0].code;
-			console.log(state.cards.currentVal1);
 			getDataFromApi(state.urls.attack2, function(data){
 				state.cards.currentVal2 = cardValue(data.cards[0].value);
 				state.cards.currentCard2 = data.cards[0].code;
-				console.log(state.cards.currentVal2);
-				state.urls.discard1 = 'https://deckofcardsapi.com/api/deck/' + state.cards.id + '/pile/discard_1/add/?cards=' + state.cards.currentCard1 + ',' + state.cards.currentCard2 + "," + state.cards.wagerCards;
-				state.urls.discard2 = 'https://deckofcardsapi.com/api/deck/' + state.cards.id + '/pile/discard_2/add/?cards=' + state.cards.currentCard1 + ',' + state.cards.currentCard2 + "," + state.cards.wagerCards;
-				state.urls.war1 = 'https://deckofcardsapi.com/api/deck/' + state.cards.id + '/pile/pile_1/draw/';
-				state.urls.war2 = 'https://deckofcardsapi.com/api/deck/' + state.cards.id + '/pile/pile_2/draw/';
+				state.urls.discard1 = 'https://deckofcardsapi.com/api/deck/' + state.cards.id + '/pile/' + state.urls.discardIt1 + '/add/?cards=' + state.cards.currentCard1 + ',' + state.cards.currentCard2 + "," + state.cards.wagerCards;
+				state.urls.discard2 = 'https://deckofcardsapi.com/api/deck/' + state.cards.id + '/pile/' + state.urls.discardIt2 + '/add/?cards=' + state.cards.currentCard1 + ',' + state.cards.currentCard2 + "," + state.cards.wagerCards;
+				state.urls.war1 = 'https://deckofcardsapi.com/api/deck/' + state.cards.id + '/pile/' + state.urls.drawIt1 + '/draw/';
+				state.urls.war2 = 'https://deckofcardsapi.com/api/deck/' + state.cards.id + '/pile/' + state.urls.drawIt2 + '/draw/';
 				if (state.cards.currentVal1 > state.cards.currentVal2){
 					getDataFromApi(state.urls.discard1, function(data){
+						if (data.piles.pile_1.remaining === 0) {
+							state.urls.drawIt1 = "discard_1";
+							state.urls.discardIt1 = "pile_1";
+						} if (data.piles.pile_2.remaining === 0){
+							state.urls.drawIt2 = "discard_2";
+							state.urls.discardIt2 = "pile_2";
+						}
+						state.cards.wagerCards = "";
 						console.log(data);
 					})
 				} else if (state.cards.currentVal1 < state.cards.currentVal2) {
 					getDataFromApi(state.urls.discard2, function(data){
+						if (data.piles.pile_1.remaining === 0) {
+							state.urls.drawIt1 = "discard_1";
+							state.urls.discardIt1 = "pile_1";
+						} if (data.piles.pile_2.remaining === 0){
+							state.urls.drawIt2 = "discard_2";
+							state.urls.discardIt2 = "pile_2";
+						}
+						state.cards.wagerCards = "";
 						console.log(data)
 					})
 				} else {
 					$.when(
 					$.getJSON(state.urls.war1, function(data){
 						state.cards.drawn1.push(data.cards[0].code);
+						if (data.piles.pile_1.remaining === 0) {
+							state.urls.drawIt1 = "discard_1";
+							state.urls.discardIt = "pile_1";
+						} if (data.piles.pile_2.remaining === 0){
+							state.urls.drawIt2 = "discard_2";
+							state.urls.discardIt2 = "pile_2";
+						}
 					}),
 					$.getJSON(state.urls.war1, function(data){
 						state.cards.drawn1.push(data.cards[0].code);
+						if (data.piles.pile_1.remaining === 0) {
+							state.urls.drawIt1 = "discard_1";
+							state.urls.discardIt = "pile_1";
+						} if (data.piles.pile_2.remaining === 0){
+							state.urls.drawIt2 = "discard_2";
+							state.urls.discardIt2 = "pile_2";
+						}
 					}),
 					$.getJSON(state.urls.war2, function(data){
 						state.cards.drawn2.push(data.cards[0].code);
+						if (data.piles.pile_1.remaining === 0) {
+							state.urls.drawIt1 = "discard_1";
+							state.urls.discardIt = "pile_1";
+						} if (data.piles.pile_2.remaining === 0){
+							state.urls.drawIt2 = "discard_2";
+							state.urls.discardIt2 = "pile_2";
+						}
 					}),
 					$.getJSON(state.urls.war2, function(data){
 						state.cards.drawn2.push(data.cards[0].code);
+						if (data.piles.pile_1.remaining === 0) {
+							state.urls.drawIt1 = "discard_1";
+							state.urls.discardIt = "pile_1";
+						} if (data.piles.pile_2.remaining === 0){
+							state.urls.drawIt2 = "discard_2";
+							state.urls.discardIt2 = "pile_2";
+						}
 					})
 					).then(function(){
 						// display drawn cards
