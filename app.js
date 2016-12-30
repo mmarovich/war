@@ -119,6 +119,12 @@ $(document).ready(function(){
 						} if (data.piles.pile_2.remaining === 0){
 							state.urls.drawIt2 = "discard_2";
 							state.urls.discardIt2 = "pile_2";
+						} if (data.piles.discard_1.remaining === 0){
+							state.urls.drawIt1 = "pile_1";
+							state.urls.discardIt1 = "discard_1";
+						} if (data.piles.discard_2.remaining === 0){
+							state.urls.drawIt2 = "pile_2";
+							state.urls.discardIt2 = "discard_2";
 						}
 						state.cards.wagerCards = "";
 						console.log(data);
@@ -131,6 +137,12 @@ $(document).ready(function(){
 						} if (data.piles.pile_2.remaining === 0){
 							state.urls.drawIt2 = "discard_2";
 							state.urls.discardIt2 = "pile_2";
+						} if (data.piles.discard_1.remaining === 0){
+							state.urls.drawIt1 = "pile_1";
+							state.urls.discardIt1 = "discard_1";
+						} if (data.piles.discard_2.remaining === 0){
+							state.urls.drawIt2 = "pile_2";
+							state.urls.discardIt2 = "discard_2";
 						}
 						state.cards.wagerCards = "";
 						console.log(data)
@@ -141,40 +153,64 @@ $(document).ready(function(){
 						state.cards.drawn1.push(data.cards[0].code);
 						if (data.piles.pile_1.remaining === 0) {
 							state.urls.drawIt1 = "discard_1";
-							state.urls.discardIt = "pile_1";
+							state.urls.discardIt1 = "pile_1";
 						} if (data.piles.pile_2.remaining === 0){
 							state.urls.drawIt2 = "discard_2";
 							state.urls.discardIt2 = "pile_2";
+						} if (data.piles.discard_1.remaining === 0){
+							state.urls.drawIt1 = "pile_1";
+							state.urls.discardIt1 = "discard_1";
+						} if (data.piles.discard_2.remaining === 0){
+							state.urls.drawIt2 = "pile_2";
+							state.urls.discardIt2 = "discard_2";
 						}
 					}),
 					$.getJSON(state.urls.war1, function(data){
 						state.cards.drawn1.push(data.cards[0].code);
 						if (data.piles.pile_1.remaining === 0) {
 							state.urls.drawIt1 = "discard_1";
-							state.urls.discardIt = "pile_1";
+							state.urls.discardIt1 = "pile_1";
 						} if (data.piles.pile_2.remaining === 0){
 							state.urls.drawIt2 = "discard_2";
 							state.urls.discardIt2 = "pile_2";
+						} if (data.piles.discard_1.remaining === 0){
+							state.urls.drawIt1 = "pile_1";
+							state.urls.discardIt1 = "discard_1";
+						} if (data.piles.discard_2.remaining === 0){
+							state.urls.drawIt2 = "pile_2";
+							state.urls.discardIt2 = "discard_2";
 						}
 					}),
 					$.getJSON(state.urls.war2, function(data){
 						state.cards.drawn2.push(data.cards[0].code);
 						if (data.piles.pile_1.remaining === 0) {
 							state.urls.drawIt1 = "discard_1";
-							state.urls.discardIt = "pile_1";
+							state.urls.discardIt1 = "pile_1";
 						} if (data.piles.pile_2.remaining === 0){
 							state.urls.drawIt2 = "discard_2";
 							state.urls.discardIt2 = "pile_2";
+						} if (data.piles.discard_1.remaining === 0){
+							state.urls.drawIt1 = "pile_1";
+							state.urls.discardIt1 = "discard_1";
+						} if (data.piles.discard_2.remaining === 0){
+							state.urls.drawIt2 = "pile_2";
+							state.urls.discardIt2 = "discard_2";
 						}
 					}),
 					$.getJSON(state.urls.war2, function(data){
 						state.cards.drawn2.push(data.cards[0].code);
 						if (data.piles.pile_1.remaining === 0) {
 							state.urls.drawIt1 = "discard_1";
-							state.urls.discardIt = "pile_1";
+							state.urls.discardIt1 = "pile_1";
 						} if (data.piles.pile_2.remaining === 0){
 							state.urls.drawIt2 = "discard_2";
 							state.urls.discardIt2 = "pile_2";
+						} if (data.piles.discard_1.remaining === 0){
+							state.urls.drawIt1 = "pile_1";
+							state.urls.discardIt1 = "discard_1";
+						} if (data.piles.discard_2.remaining === 0){
+							state.urls.drawIt2 = "pile_2";
+							state.urls.discardIt2 = "discard_2";
 						}
 					})
 					).then(function(){
