@@ -142,6 +142,7 @@ $(document).ready(function(){
 		}
 	});
 	$('.attack').click(function(e){
+		$('.attack').prop('disabled', true);
 		state.urls.attack1 = 'https://deckofcardsapi.com/api/deck/' + state.cards.id + '/pile/' + state.urls.drawIt1 + '/draw/';
 		state.urls.attack2 = 'https://deckofcardsapi.com/api/deck/' + state.cards.id + '/pile/' + state.urls.drawIt2 + '/draw/';
 		getDataFromApi(state.urls.attack1, function(data){
@@ -161,6 +162,7 @@ $(document).ready(function(){
 						swapPiles(data);
 						endGame(data);
 						state.cards.wagerCards = "";
+						$('.attack').prop('disabled', false);
 						console.log("you won it");
 						console.log(data);
 					})
@@ -169,6 +171,7 @@ $(document).ready(function(){
 						swapPiles(data);
 						endGame(data);
 						state.cards.wagerCards = "";
+						$('.attack').prop('disabled', false);
 						console.log("you lost it");
 						console.log(data)
 					})
@@ -176,8 +179,10 @@ $(document).ready(function(){
 					console.log("it's a war!");
 					if (data.piles.discard_1 && data.piles.pile_1.remaining === 0 && data.piles.discard_1.remaining === 0){
 						getDataFromApi(state.urls.discard1, warDiscard)
+						$('.attack').prop('disabled', false);
 					} else if (data.piles.discard_2 && data.piles.pile_2.remaining === 0 && data.piles.discard_2.remaining ===0){
 						getDataFromApi(state.urls.discard2, warDiscard)
+						$('.attack').prop('disabled', false);
 					} else {	
 						getDataFromApi(state.urls.war1, function(data){
 							state.cards.drawn1.push(data.cards[0].code);
@@ -187,8 +192,10 @@ $(document).ready(function(){
 							swapPiles(data);
 								if (data.piles.discard_1 && data.piles.pile_1.remaining === 0 && data.piles.discard_1.remaining === 0){
 									getDataFromApi(state.urls.discard1, warDiscard)
+									$('.attack').prop('disabled', false);
 								} else if (data.piles.discard_2 && data.piles.pile_2.remaining === 0 && data.piles.discard_2.remaining ===0){
 									getDataFromApi(state.urls.discard2, warDiscard)
+									$('.attack').prop('disabled', false);
 								} else {
 								console.log("It's a War! 2")				
 									getDataFromApi(state.urls.war1, function(data){
@@ -199,8 +206,10 @@ $(document).ready(function(){
 										swapPiles(data);
 											if (data.piles.discard_1 && data.piles.pile_1.remaining === 0 && data.piles.discard_1.remaining === 0){
 												getDataFromApi(state.urls.discard1, warDiscard)
+												$('.attack').prop('disabled', false);
 											} else if (data.piles.discard_2 && data.piles.pile_2.remaining === 0 && data.piles.discard_2.remaining ===0){
 												getDataFromApi(state.urls.discard2, warDiscard)
+												$('.attack').prop('disabled', false);
 											} else {
 											// display drawn cards
 											state.cards.wagerCards += (state.cards.wagerCards.length > 0 ? "," : "") + state.cards.currentCard1 + "," + state.cards.currentCard2 + "," + state.cards.drawn1.join() + "," + state.cards.drawn2.join();
@@ -208,6 +217,7 @@ $(document).ready(function(){
 											state.cards.drawn2 = [];
 											state.cards.currentCard1 = "";
 											state.cards.currentCard2 = "";
+											$('.attack').prop('disabled', false);
 											console.log(state.cards.wagerCards);
 											}
 										})
