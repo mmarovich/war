@@ -114,9 +114,10 @@ $(document).ready(function(){
 					return card.code;
 				}).join();
 				data.cards.forEach(function(item, index){
-					$('.startDeck').append('<div class="card"><img class="card" src="image/card back red.png" style="z-index:' + (index + 100) + 
-						'; margin-left:' + (index / 2) + 'px; margin-bottom:' + (index / 2) + 'px"></div>');
+					$('.startDeck').append('<div class="cardContainer"><img class="card" src="image/card back red.png" style="z-index:' + (index + 100) + 
+						'; margin-left:' + ((index / 2) - 30) + 'px; margin-bottom:' + (index / 2) + 'px"></div>');
 				})
+				$('.cardContainer').appendTo('.back');
 				state.urls.pile1 = 'https://deckofcardsapi.com/api/deck/' + 
 				state.cards.id + '/pile/pile_1/add/?cards=' + codeString;
 				getDataFromApi(state.urls.pile1, function(data){
@@ -130,8 +131,8 @@ $(document).ready(function(){
 					return card.code;
 				}).join();
 				data.cards.forEach(function(item, index){
-					$('.startDeck').append('<div class="card"><img class="card" src="image/card back red.png" style="z-index:' + (index + 126) + 
-						'; margin-left:' + (index / 2) + 'px; margin-bottom:' + (index / 2) + 'px"></div>');
+					$('.startDeck').append('<div class="cardContainer"><img class="card" src="image/card back red.png" style="z-index:' + (index + 126) + 
+						'; margin-left:' + ((index / 2) - 30) + 'px; margin-bottom:' + (index / 2) + 'px"></div>');
 				});
 				state.urls.pile2 = 'https://deckofcardsapi.com/api/deck/' + 
 				state.cards.id + '/pile/pile_2/add/?cards=' + codeString;
