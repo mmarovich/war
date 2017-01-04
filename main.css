@@ -14,12 +14,6 @@ body {
 	top: 0;
 }
 
-.ai {
-	width: 100%;
-	height: 33%;
-	background-color: grey;
-}
-
 .startDeck {
 	width: 100%;
 	height: 33%;
@@ -27,9 +21,8 @@ body {
 	position: relative;
 }
 
-.cardContainer {
-	height: 100%;
-	/*padding-left: 50%;*/
+.cardContainer1, .cardContainer2 {
+	transition: width 2s linear 1s;
 }
 
 .card {
@@ -41,24 +34,70 @@ body {
 	top: 25%;
 }
 
+.cardFront {
+	height: 100px;
+	width: 60px;
+	border: 1px solid gray;
+	position: absolute;
+	left: 50%;
+	top: 25%;
+}
+
+/*Animation Styles */
+
+.cardFront {
+	transform: rotateY(90deg);
+}
+
+.flipped1 {
+	animation: flip 0.2s ease-in forwards;
+}
+
+.flipped2 {
+	animation: flip 0.2s 0.2s ease-in backwards;
+}
+
+@keyframes flip {
+	0%{ transform: rotateY(0deg); }
+	100%{ transform: rotateY(90deg); }
+}
+
+/* end */
+
 .player {
 	width: 100%;
 	height: 33%;
+	position: relative;
+}
+
+.ai {
+	width: 100%;
+	height: 33%;
+	position: relative;
 }
 
 .flipper {
 	width: 100%;
 	height: 100%;
+	position: absolute;
 }
 
 .front {
 	width: 100%;
 	height: 100%;
+	position: absolute;
 }
 
-.back {
+.playerBack {
 	width: 100%;
 	height: 100%;
+	position: absolute;
+}
+
+.aiBack {
+	width: 100%;
+	height: 100%;
+	position: absolute;
 }
 
 .hidden {

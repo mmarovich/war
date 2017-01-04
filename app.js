@@ -114,10 +114,12 @@ $(document).ready(function(){
 					return card.code;
 				}).join();
 				data.cards.forEach(function(item, index){
-					$('.startDeck').append('<div class="cardContainer"><img class="card" src="image/card back red.png" style="z-index:' + (index + 100) + 
-						'; margin-left:' + ((index / 2) - 30) + 'px; margin-bottom:' + (index / 2) + 'px"></div>');
+					$('.startDeck').append('<div class="cardContainer1"><img class="card" src="image/card back red.png" style="z-index:' + (index + 100) + 
+						'; margin-left:' + ((index / 2) - 30) + 'px; margin-bottom:' + (index / 2) + 'px">' + 
+						'<img class="cardFront" src="' + data.cards[index].image + '" style="z-index:' + (index + 100) + '; margin-left:' + ((index / 2) - 30) +
+						'px; margin-bottom:' + (index / 2) + 'px"></div>');
 				})
-				$('.cardContainer').appendTo('.back');
+				$('.cardContainer1').appendTo('.playerBack');
 				state.urls.pile1 = 'https://deckofcardsapi.com/api/deck/' + 
 				state.cards.id + '/pile/pile_1/add/?cards=' + codeString;
 				getDataFromApi(state.urls.pile1, function(data){
@@ -131,9 +133,12 @@ $(document).ready(function(){
 					return card.code;
 				}).join();
 				data.cards.forEach(function(item, index){
-					$('.startDeck').append('<div class="cardContainer"><img class="card" src="image/card back red.png" style="z-index:' + (index + 126) + 
-						'; margin-left:' + ((index / 2) - 30) + 'px; margin-bottom:' + (index / 2) + 'px"></div>');
+					$('.startDeck').append('<div class="cardContainer2"><img class="card" src="image/card back red.png" style="z-index:' + (index + 126) + 
+						'; margin-left:' + ((index / 2) - 30) + 'px; margin-bottom:' + (index / 2) + 'px">' + 
+						'<img class="cardFront" src="' + data.cards[index].image + '" style="z-index:' + (index + 100) + '; margin-left:' + ((index / 2) - 30) +
+						'px; margin-bottom:' + (index / 2) + 'px"></div>');
 				});
+				$('.cardContainer2').appendTo('.aiBack');
 				state.urls.pile2 = 'https://deckofcardsapi.com/api/deck/' + 
 				state.cards.id + '/pile/pile_2/add/?cards=' + codeString;
 				getDataFromApi(state.urls.pile2, function(data){
@@ -150,10 +155,17 @@ $(document).ready(function(){
 			swapPiles(data);
 			state.cards.currentVal1 = cardValue(data.cards[0].value);
 			state.cards.currentCard1 = data.cards[0].code;
+			$('.cardContainer1:last .card').animate({top: "-70px"}, "slow", function (){
+				$('.playerFront').append($('.cardContainer1:last')[0].outerHTML); 
+				$('.cardContainer1:last').remove();});
 			getDataFromApi(state.urls.attack2, function(data){
 				swapPiles(data);
 				state.cards.currentVal2 = cardValue(data.cards[0].value);
 				state.cards.currentCard2 = data.cards[0].code;
+				$('.cardContainer2:last .card').animate({top: "180px"}, "slow", function (){
+					$('.aiFront').append($('.cardContainer2:last')[0].outerHTML); 
+					$('.cardContainer2:last').remove();});
+				$('.playerFront > .cardContainer1 > .card').addClass('flipped1');
 				state.urls.discard1 = 'https://deckofcardsapi.com/api/deck/' + state.cards.id + '/pile/' + state.urls.discardIt1 + '/add/?cards=' + state.cards.currentCard1 + ',' + state.cards.currentCard2 + "," + state.cards.wagerCards;
 				state.urls.discard2 = 'https://deckofcardsapi.com/api/deck/' + state.cards.id + '/pile/' + state.urls.discardIt2 + '/add/?cards=' + state.cards.currentCard1 + ',' + state.cards.currentCard2 + "," + state.cards.wagerCards;
 				state.urls.war1 = 'https://deckofcardsapi.com/api/deck/' + state.cards.id + '/pile/' + state.urls.drawIt1 + '/draw/';
