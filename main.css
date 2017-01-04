@@ -54,7 +54,7 @@ body {
 }
 
 .flipped2 {
-	animation: flip 0.2s 0.2s ease-in backwards;
+	animation: flip 0.2s 0.2s ease-in forwards reverse;
 }
 
 @keyframes flip {

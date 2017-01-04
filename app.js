@@ -155,17 +155,30 @@ $(document).ready(function(){
 			swapPiles(data);
 			state.cards.currentVal1 = cardValue(data.cards[0].value);
 			state.cards.currentCard1 = data.cards[0].code;
-			$('.cardContainer1:last .card').animate({top: "-70px"}, "slow", function (){
+			var cardDraw1 = $('.playerBack > .cardContainer1:last .card');
+			var cardDraw2 = $('.playerBack > .cardContainer1:last .cardFront');
+			cardDraw1.animate({top: "-70px"}, "slow", function (){
+				cardDraw2.animate({top: "-70px"}, "slow", function(){
+				cardDraw1.addClass('flipped1');
+				cardDraw2.addClass('flipped2');
 				$('.playerFront').append($('.cardContainer1:last')[0].outerHTML); 
-				$('.cardContainer1:last').remove();});
+				$('.cardContainer1:last').remove();
+				});
+			});
 			getDataFromApi(state.urls.attack2, function(data){
 				swapPiles(data);
 				state.cards.currentVal2 = cardValue(data.cards[0].value);
 				state.cards.currentCard2 = data.cards[0].code;
-				$('.cardContainer2:last .card').animate({top: "180px"}, "slow", function (){
+				var cardDraw11 = $('.aiBack > .cardContainer2:last .card');
+				var cardDraw22 = $('.aiBack > .cardContainer2:last .cardFront');
+				cardDraw11.animate({top: "180px"}, "slow", function (){
+					cardDraw22.animate({top: "180px"}, "slow", function(){
+					cardDraw11.addClass('flipped1');
+					cardDraw22.addClass('flipped2');
 					$('.aiFront').append($('.cardContainer2:last')[0].outerHTML); 
-					$('.cardContainer2:last').remove();});
-				$('.playerFront > .cardContainer1 > .card').addClass('flipped1');
+					$('.cardContainer2:last').remove();
+					});
+				});
 				state.urls.discard1 = 'https://deckofcardsapi.com/api/deck/' + state.cards.id + '/pile/' + state.urls.discardIt1 + '/add/?cards=' + state.cards.currentCard1 + ',' + state.cards.currentCard2 + "," + state.cards.wagerCards;
 				state.urls.discard2 = 'https://deckofcardsapi.com/api/deck/' + state.cards.id + '/pile/' + state.urls.discardIt2 + '/add/?cards=' + state.cards.currentCard1 + ',' + state.cards.currentCard2 + "," + state.cards.wagerCards;
 				state.urls.war1 = 'https://deckofcardsapi.com/api/deck/' + state.cards.id + '/pile/' + state.urls.drawIt1 + '/draw/';
