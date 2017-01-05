@@ -84,10 +84,8 @@ function warDiscard(data){
 
 function endGame(data){
 	if (data.piles.discard_1 && data.piles.pile_1.remaining === 0 && data.piles.discard_1.remaining === 0){
-		$('.game').addClass('hidden');
 		$('.youLose').removeClass('hidden');
 	} if (data.piles.discard_2 && data.piles.pile_2.remaining === 0 && data.piles.discard_2.remaining === 0){
-		$('.game').addClass('hidden');
 		$('.youWin').removeClass('hidden');
 	}
 }
@@ -187,6 +185,7 @@ $(document).ready(function(){
 					getDataFromApi(state.urls.discard1, function(data){
 						swapPiles(data);
 						endGame(data);
+						$('.playerDiscard').append($('.playerFront').innerHTML);
 						state.cards.wagerCards = "";
 						$('.attack').prop('disabled', false);
 						console.log("you won it");
