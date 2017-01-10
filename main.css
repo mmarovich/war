@@ -2,7 +2,7 @@
   box-sizing: border-box;
 }
 
-body {
+body, html {
 	margin: 0;
 
 }
@@ -22,7 +22,9 @@ body {
 }
 
 .cardContainer1, .cardContainer2 {
-	transition: width 2s linear 1s;
+	height: 100%;
+	width: 100%;
+	position: absolute;
 }
 
 .card {
@@ -62,6 +64,19 @@ body {
 	100%{ transform: rotateY(90deg); }
 }
 
+.reflip1 {
+	animation: reflip 0.2s ease-in forwards;
+}
+
+.reflip2 {
+	animation: reflip 0.2s 0.2s ease-in forwards reverse;
+}
+
+@keyframes reflip {
+	0%{ transform: rotateY(90deg); }
+	100%{ transform: rotateY(0deg); }
+}
+
 /* end */
 
 .player {
@@ -94,6 +109,18 @@ body {
 	position: absolute;
 }
 
+.aiFront {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+}
+
+.playerFront {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+}
+
 .aiBack {
 	width: 100%;
 	height: 100%;
@@ -101,16 +128,14 @@ body {
 }
 
 .aiDiscard {
-	right: 0;
-	width: 25%;
-	height: 100%;
+	width: 100%;
+	height: 300%;
 	position: absolute;
 }
 
 .playerDiscard {
-	right: 0;
-	width: 25%;
-	height: 100%;
+	width: 100%;
+	height: 300%;
 	position: absolute;
 }
 
