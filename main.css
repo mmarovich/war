@@ -10,39 +10,53 @@ body, html {
 .game{
 	min-width: 100%;
 	height: 100%;
-	position: absolute;
+	position: fixed;
 	top: 0;
 }
 
-.startDeck {
+/*.startDeck {
 	width: 100%;
 	height: 33%;
 	background-color: lightblue;
 	position: relative;
+}*/
+
+.cardContainer1 {
+	height: 100px;
+	width: 60px;
+	top: 75%;
+	left: 43%;
+	position: fixed;
 }
 
-.cardContainer1, .cardContainer2 {
-	height: 100%;
-	width: 100%;
-	position: absolute;
+.cardContainer2 {
+	height: 100px;
+	width: 60px;
+	top: 5%;
+	left: 43%;
+	position: fixed;
+}
+
+.played {
+	position: fixed;
 }
 
 .card {
 	height: 100px;
 	width: 60px;
 	border: 1px solid gray;
-	position: absolute;
-	left: 50%;
-	top: 25%;
+	position: fixed;
+	/*left: 50%;
+	top: 25%;*/
 }
 
 .cardFront {
 	height: 100px;
 	width: 60px;
 	border: 1px solid gray;
-	position: absolute;
-	left: 50%;
-	top: 25%;
+	position: fixed;
+/*	left: 50%;
+	top: 25%;*/
 }
 
 /*Animation Styles */
@@ -53,10 +67,14 @@ body, html {
 
 .flipped1 {
 	animation: flip 0.2s ease-in forwards;
+	/*left: 43%;*/
+	position: fixed;
 }
 
 .flipped2 {
 	animation: flip 0.2s 0.2s ease-in forwards reverse;
+	/*left: 43%;*/
+	position: fixed;
 }
 
 @keyframes flip {
@@ -79,31 +97,66 @@ body, html {
 
 /* end */
 
-.player {
+/*.player {
 	width: 100%;
 	height: 33%;
 	position: relative;
-}
+}*/
 
-.ai {
+/*.ai {
 	width: 100%;
 	height: 33%;
 	position: relative;
-}
+}*/
 
-.flipper {
+/*.flipper {
 	width: 100%;
 	height: 100%;
 	position: absolute;
-}
+}*/
 
-.front {
+/*.front {
 	width: 100%;
 	height: 100%;
 	position: absolute;
+}*/
+
+.aiDiscard {
+	width: 60px;
+	height: 100px;
+	position: fixed;
 }
 
-.playerBack {
+.playerDiscard1 {
+	width: 60px;
+	height: 100px;
+	top: 0;
+	position: fixed;
+}
+
+.playerDiscard2 {
+	width: 60px;
+	height: 100px;
+	position: fixed;
+}
+
+.hidden {
+	display: none;
+}
+
+.attack {
+	position: absolute;
+	z-index: 200;
+	bottom: 0;
+	left: 50%;
+	margin-left: -20px;
+}
+
+.played {
+	left: 50%;
+}
+
+/*.playerBack {
 	width: 100%;
 	height: 100%;
 	position: absolute;
@@ -125,28 +178,4 @@ body, html {
 	width: 100%;
 	height: 100%;
 	position: absolute;
-}
-
-.aiDiscard {
-	width: 100%;
-	height: 300%;
-	position: absolute;
-}
-
-.playerDiscard {
-	width: 100%;
-	height: 300%;
-	position: absolute;
-}
-
-.hidden {
-	display: none;
-}
-
-.attack {
-	position: absolute;
-	z-index: 200;
-	bottom: 0;
-	left: 50%;
-	margin-left: -20px;
-}
+}*/

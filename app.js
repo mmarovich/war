@@ -154,12 +154,12 @@ $(document).ready(function(){
 					return card.code;
 				}).join();
 				data.cards.forEach(function(item, index){
-					$('.startDeck').append('<div class="cardContainer1"><img class="card" src="image/card back red.png" style="z-index:' + (index + 100) + 
-						'; margin-left:' + ((index / 2) - 30) + 'px; margin-bottom:' + (index / 2) + 'px">' + 
-						'<img class="cardFront" src="' + data.cards[index].image + '" style="z-index:' + (index + 100) + '; margin-left:' + ((index / 2) - 30) +
+					$('.game').append('<div class="cardContainer1" style="z-index:' + (index + 100) + '"><img class="card" src="image/card back red.png" style="margin-left:' +
+						((index / 2) - 30) + 'px; margin-bottom:' + (index / 2) + 'px">' + 
+						'<img class="cardFront" src="' + data.cards[index].image + '" style="margin-left:' + ((index / 2) - 30) +
 						'px; margin-bottom:' + (index / 2) + 'px"></div>');
 				})
-				$('.cardContainer1').appendTo('.playerBack');
+				// $('.cardContainer1').appendTo('.playerBack');
 				state.urls.pile1 = 'https://deckofcardsapi.com/api/deck/' + 
 				state.cards.id + '/pile/pile_1/add/?cards=' + codeString;
 				getDataFromApi(state.urls.pile1, function(data){
@@ -173,12 +173,12 @@ $(document).ready(function(){
 					return card.code;
 				}).join();
 				data.cards.forEach(function(item, index){
-					$('.startDeck').append('<div class="cardContainer2"><img class="card" src="image/card back red.png" style="z-index:' + (index + 126) + 
-						'; margin-left:' + ((index / 2) - 30) + 'px; margin-bottom:' + (index / 2) + 'px">' + 
-						'<img class="cardFront" src="' + data.cards[index].image + '" style="z-index:' + (index + 100) + '; margin-left:' + ((index / 2) - 30) +
+					$('.game').append('<div class="cardContainer2" style="z-index:' + (index + 100) + '"><img class="card" src="image/card back red.png" style="margin-left:' +
+						((index / 2) - 30) + 'px; margin-bottom:' + (index / 2) + 'px">' + 
+						'<img class="cardFront" src="' + data.cards[index].image + '" style="margin-left:' + ((index / 2) - 30) +
 						'px; margin-bottom:' + (index / 2) + 'px"></div>');
 				});
-				$('.cardContainer2').appendTo('.aiBack');
+				// $('.cardContainer2').appendTo('.aiBack');
 				state.urls.pile2 = 'https://deckofcardsapi.com/api/deck/' + 
 				state.cards.id + '/pile/pile_2/add/?cards=' + codeString;
 				getDataFromApi(state.urls.pile2, function(data){
@@ -188,28 +188,26 @@ $(document).ready(function(){
 		}
 	});
 
-	function animate1Done(event, data){
+	function attackPlayer1Done(event, data){
 		getDataFromApi(state.urls.attack2, function(data){
 			swapPiles(data);
 			state.cards.currentVal2 = cardValue(data.cards[0].value);
 			state.cards.currentCard2 = data.cards[0].code;
-			var cardDraw11 = $('.aiBack > .cardContainer2:last .card');
-			var cardDraw22 = $('.aiBack > .cardContainer2:last .cardFront');
-			cardDraw11.animate({top: "180px"}, "fast", function (){
-				cardDraw22.animate({top: "180px"}, "fast", function(){
-					cardDraw11.addClass('flipped1');
-					cardDraw22.addClass('flipped2');
-					$('.aiBack > .cardContainer2:last img.cardFront.flipped2').css('z-index',200-$('.aiBack > .cardContainer2:last img.cardFront.flipped2').css('z-index'));
-					$('.aiBack > .cardContainer2:last img.cardFront.flipped1').css('z-index',200-$('.aiBack > .cardContainer2:last img.cardFront.flipped1').css('z-index'));
-					$('.aiFront').append($('.aiBack > .cardContainer2:last')[0].outerHTML); 
-					$('.aiBack > .cardContainer2:last').remove();
-					observer.onEvent("animate2Done", data);
-				});
+			var cardDraw1 = $('.game > .cardContainer2:last');
+			var cardFlipped1 = $('.game > .cardContainer2:last > .card');
+			var cardFlipped2 = $('.game > .cardContainer2:last > .cardFront');
+			cardDraw1.animate({top: "30%", left: "43%"}, "fast", function (){
+				cardFlipped1.addClass('flipped1');
+				cardFlipped2.addClass('flipped2');
+				cardDraw1.addClass('played');
+				cardDraw1.removeClass('cardContainer2');
+				$('.game > .played').css('z-index',200-$('.game > .played').css('z-index'));
+				observer.onEvent("attackPlayer2Done", data);
 			});
 		});
 	}
 
-	function animate2Done(event, data){
+	function attackPlayer2Done(event, data){
 		state.urls.discard1 = 'https://deckofcardsapi.com/api/deck/' + state.cards.id + '/pile/' + state.urls.discardIt1 + '/add/?cards=' + state.cards.currentCard1 + ',' + state.cards.currentCard2 + "," + state.cards.wagerCards;
 		state.urls.discard2 = 'https://deckofcardsapi.com/api/deck/' + state.cards.id + '/pile/' + state.urls.discardIt2 + '/add/?cards=' + state.cards.currentCard1 + ',' + state.cards.currentCard2 + "," + state.cards.wagerCards;
 		state.urls.war1 = 'https://deckofcardsapi.com/api/deck/' + state.cards.id + '/pile/' + state.urls.drawIt1 + '/draw/';
@@ -218,21 +216,21 @@ $(document).ready(function(){
 			getDataFromApi(state.urls.discard1, function(data){
 				swapPiles(data);
 				endGame(data);
-				$('.playerFront > .cardContainer1 .cardFront').delay(500).animate({top: "0" , left: "30px"}, "fast", function(){
-					$('.playerFront > .cardContainer1 .card').animate({top: "0" , left: "30px"}, "fast", function(){
-						$('.aiFront > .cardContainer2 .cardFront').delay(0).animate({top: "0", left: "30px"}, "fast", function(){
-							$('.aiFront > .cardContainer2 .card').delay(0).animate({top: "0", left: "30px"}, "fast", function(){
-								$('.playerDiscard').append($('.playerFront > .cardContainer1'));
-								$('.playerDiscard').append($('.aiFront > .cardContainer2'));
-								$('.playerDiscard').append($('.playerFront > .cardContainer2'));
-								$('.playerDiscard').append($('.aiFront > .cardContainer1'));
-								$('.playerFront > .cardContainer1').remove();
-								$('.playerFront > .cardContainer2').remove();
-								$('.aiFront > .cardContainer1').remove();
-								$('.aiFront > .cardContainer2').remove();
-							});
-						});
-					});
+				$('.played').delay(1000).animate({left: "10%", top: "75%"}, "fast", function(){
+					// $('.playerFront > .cardContainer1 .card').animate({top: "0" , left: "30px"}, "fast", function(){
+					// 	$('.aiFront > .cardContainer2 .cardFront').delay(0).animate({top: "0", left: "30px"}, "fast", function(){
+					// 		$('.aiFront > .cardContainer2 .card').delay(0).animate({top: "0", left: "30px"}, "fast", function(){
+								// $('.playerDiscard').append($('.playerFront > .cardContainer1'));
+								// $('.playerDiscard').append($('.aiFront > .cardContainer2'));
+								// $('.playerDiscard').append($('.playerFront > .cardContainer2'));
+								// $('.playerDiscard').append($('.aiFront > .cardContainer1'));
+								$('.played').addClass('playerDiscard1');
+								$('.played').removeClass('played');
+								$('.game > .played').css('z-index',200-$('.game > .played').css('z-index'));
+								// $('.playerFront > .cardContainer1').remove();
+								// $('.playerFront > .cardContainer2').remove();
+								// $('.aiFront > .cardContainer1').remove();
+								// $('.aiFront > .cardContainer2').remove();
 				});
 				state.cards.wagerCards = "";
 				$('.attack').prop('disabled', false);
@@ -243,21 +241,20 @@ $(document).ready(function(){
 			getDataFromApi(state.urls.discard2, function(data){
 				swapPiles(data);
 				endGame(data);
-				$('.playerFront > .cardContainer1 .cardFront').delay(500).animate({top: "0" , left: "30px"}, "fast", function(){
-					$('.playerFront > .cardContainer1 .card').animate({top: "0" , left: "30px"}, "fast", function(){
-						$('.aiFront > .cardContainer2 .cardFront').delay(0).animate({top: "0", left: "30px"}, "fast", function(){
-							$('.aiFront > .cardContainer2 .card').delay(0).animate({top: "0", left: "30px"}, "fast", function(){
-								$('.aiDiscard').append($('.playerFront > .cardContainer1'));
-								$('.aiDiscard').append($('.aiFront > .cardContainer2'));
-								$('.aiDiscard').append($('.playerFront > .cardContainer2'));
-								$('.aiDiscard').append($('.aiFront > .cardContainer1'));
-								$('.playerFront > .cardContainer1').remove();
-								$('.playerFront > .cardContainer2').remove();
-								$('.aiFront > .cardContainer1').remove();
-								$('.aiFront > .cardContainer2').remove();
-							});
-						});
-					});
+				$('.played').delay(1000).animate({left: "10%", top: "5%"}, "fast", function(){
+					// $('.playerFront > .cardContainer1 .card').animate({top: "0" , left: "30px"}, "fast", function(){
+					// 	$('.aiFront > .cardContainer2 .cardFront').delay(0).animate({top: "0", left: "30px"}, "fast", function(){
+					// 		$('.aiFront > .cardContainer2 .card').delay(0).animate({top: "0", left: "30px"}, "fast", function(){
+					// 			$('.aiDiscard').append($('.playerFront > .cardContainer1'));
+					// 			$('.aiDiscard').append($('.aiFront > .cardContainer2'));
+					// 			$('.aiDiscard').append($('.playerFront > .cardContainer2'));
+					// 			$('.aiDiscard').append($('.aiFront > .cardContainer1'));
+								$('.played').addClass('playerDiscard2');
+								$('.played').removeClass('played');
+								// $('.playerFront > .cardContainer1').remove();
+								// $('.playerFront > .cardContainer2').remove();
+								// $('.aiFront > .cardContainer1').remove();
+								// $('.aiFront > .cardContainer2').remove();
 				});
 				state.cards.wagerCards = "";
 				$('.attack').prop('disabled', false);
@@ -276,50 +273,112 @@ $(document).ready(function(){
 				getDataFromApi(state.urls.war1, function(data){
 					state.cards.drawn1.push(data.cards[0].code);
 					swapPiles(data);
-					getDataFromApi(state.urls.war2, function(data){
-					state.cards.drawn2.push(data.cards[0].code);
-					swapPiles(data);
-						if (data.piles.discard_1 && data.piles.pile_1.remaining === 0 && data.piles.discard_1.remaining === 0){
-							getDataFromApi(state.urls.discard1, warDiscard)
-							$('.attack').prop('disabled', false);
-						} else if (data.piles.discard_2 && data.piles.pile_2.remaining === 0 && data.piles.discard_2.remaining ===0){
-							getDataFromApi(state.urls.discard2, warDiscard)
-							$('.attack').prop('disabled', false);
-						} else {
-						console.log("It's a War! 2")				
-							getDataFromApi(state.urls.war1, function(data){
-							state.cards.drawn1.push(data.cards[0].code);
-							swapPiles(data);
-								getDataFromApi(state.urls.war2, function(data){
-								state.cards.drawn2.push(data.cards[0].code);
-								swapPiles(data);
-									if (data.piles.discard_1 && data.piles.pile_1.remaining === 0 && data.piles.discard_1.remaining === 0){
-										getDataFromApi(state.urls.discard1, warDiscard)
-										$('.attack').prop('disabled', false);
-									} else if (data.piles.discard_2 && data.piles.pile_2.remaining === 0 && data.piles.discard_2.remaining ===0){
-										getDataFromApi(state.urls.discard2, warDiscard)
-										$('.attack').prop('disabled', false);
-									} else {
-									// display drawn cards
-									state.cards.wagerCards += (state.cards.wagerCards.length > 0 ? "," : "") + state.cards.currentCard1 + "," + state.cards.currentCard2 + "," + state.cards.drawn1.join() + "," + state.cards.drawn2.join();
-									state.cards.drawn1 = [];
-									state.cards.drawn2 = [];
-									state.cards.currentCard1 = "";
-									state.cards.currentCard2 = "";
-									$('.attack').prop('disabled', false);
-									console.log(state.cards.wagerCards);
-									}
-								})
-							})
-						}
+					var warDraw11 = $('.game > .cardContainer1:last');
+					var cardFlipped1 = $('.game > .cardContainer1:last > .card');
+					var cardFlipped2 = $('.game > .cardContainer1:last > .cardFront');
+					warDraw11.animate({top: "45%", left: "35%"}, "fast", function (){
+						warDraw11.addClass('played');
+						warDraw11.removeClass('cardContainer1');
+						cardFlipped1.addClass('flipped1');
+						cardFlipped2.addClass('flipped2');
+						$('.game > .played').css('z-index',200-$('.game > .played').css('z-index'));
+						observer.onEvent("playerWager1Done", "");
 					})
 				})
 			}
 		}
 	}
 
-	observer.addEventListener("animate2Done", animate2Done);
-	observer.addEventListener("animate1Done", animate1Done);
+	function playerWager1Done(event, data){
+		getDataFromApi(state.urls.war2, function(data){
+			state.cards.drawn2.push(data.cards[0].code);
+			swapPiles(data);
+			var warDraw21 = $('.game > .cardContainer2:last');
+			var cardFlipped1 = $('.game > .cardContainer2:last > .card');
+			var cardFlipped2 = $('.game > .cardContainer2:last > .cardFront');
+			warDraw21.animate({top: "45%", left: "51%"}, "fast", function (){
+				warDraw21.addClass('played');
+				warDraw21.removeClass('cardContainer1');
+				cardFlipped1.addClass('flipped1');
+				cardFlipped2.addClass('flipped2');
+				$('.game > .played').css('z-index',200-$('.game > .played').css('z-index'));
+				observer.onEvent("aiWager1Done", "");
+			});
+		});
+	}
+			
+	function aiWager1Done(event, data){	
+		if (data.piles.discard_1 && data.piles.pile_1.remaining === 0 && data.piles.discard_1.remaining === 0){
+			getDataFromApi(state.urls.discard1, warDiscard)
+			$('.attack').prop('disabled', false);
+		} else if (data.piles.discard_2 && data.piles.pile_2.remaining === 0 && data.piles.discard_2.remaining ===0){
+			getDataFromApi(state.urls.discard2, warDiscard)
+			$('.attack').prop('disabled', false);
+		} else {				
+			getDataFromApi(state.urls.war1, function(data){
+				state.cards.drawn1.push(data.cards[0].code);
+				swapPiles(data);
+				var warDraw12 = $('.game > .cardContainer1:last');
+				var cardFlipped1 = $('.game > .cardContainer1:last > .card');
+				var cardFlipped2 = $('.game > .cardContainer1:last > .cardFront');
+				warDraw11.animate({top: "45%", left: "20%"}, "fast", function (){
+					warDraw12.addClass('played');
+					warDraw12.removeClass('cardContainer1');
+					cardFlipped1.addClass('flipped1');
+					cardFlipped2.addClass('flipped2');
+					$('.game > .played').css('z-index',200-$('.game > .played').css('z-index'));
+					observer.onEvent("playerWager2Done", "");
+				});
+			});
+		}
+	}
+
+	function playerWager2Done(event, data){
+		getDataFromApi(state.urls.war2, function(data){
+			state.cards.drawn2.push(data.cards[0].code);
+			swapPiles(data);
+			var warDraw21 = $('.game > .cardContainer2:last');
+			var cardFlipped1 = $('.game > .cardContainer2:last > .card');
+			var cardFlipped2 = $('.game > .cardContainer2:last > .cardFront');
+			warDraw11.animate({top: "45%", left: "75%"}, "fast", function (){
+				warDraw21.addClass('played');
+				warDraw21.removeClass('cardContainer2');
+				cardFlipped1.addClass('flipped1');
+				cardFlipped2.addClass('flipped2');
+				$('.game > .played').css('z-index',200-$('.game > .played').css('z-index'));
+				observer.onEvent("aiWager2Done", "");
+			});
+		});
+	}
+
+	function aiWager2Done(event, data){
+		if (data.piles.discard_1 && data.piles.pile_1.remaining === 0 && data.piles.discard_1.remaining === 0){
+			getDataFromApi(state.urls.discard1, warDiscard)
+			$('.attack').prop('disabled', false);
+		} else if (data.piles.discard_2 && data.piles.pile_2.remaining === 0 && data.piles.discard_2.remaining ===0){
+			getDataFromApi(state.urls.discard2, warDiscard)
+			$('.attack').prop('disabled', false);
+		} else {
+		// display drawn cards
+		state.cards.wagerCards += (state.cards.wagerCards.length > 0 ? "," : "") + state.cards.currentCard1 + "," + state.cards.currentCard2 + "," + state.cards.drawn1.join() + "," + state.cards.drawn2.join();
+		state.cards.drawn1 = [];
+		state.cards.drawn2 = [];
+		state.cards.currentCard1 = "";
+		state.cards.currentCard2 = "";
+		$('.attack').prop('disabled', false);
+		console.log(state.cards.wagerCards);
+		}
+	}
+
+	observer.addEventListener("attackPlayer2Done", attackPlayer2Done);
+	observer.addEventListener("attackPlayer1Done", attackPlayer1Done);
+	observer.addEventListener("playerWager1Done", playerWager1Done);
+	observer.addEventListener("aiWager1Done", aiWager1Done);
+	observer.addEventListener("playerWager2Done", playerWager2Done);
+	observer.addEventListener("aiWager2Done", aiWager2Done);
+
+// Attack function for human player.
+
 	$('.attack').click(function(e){
 		$('.attack').prop('disabled', true);
 		state.urls.attack1 = 'https://deckofcardsapi.com/api/deck/' + state.cards.id + '/pile/' + state.urls.drawIt1 + '/draw/';
@@ -328,18 +387,16 @@ $(document).ready(function(){
 			swapPiles(data);
 			state.cards.currentVal1 = cardValue(data.cards[0].value);
 			state.cards.currentCard1 = data.cards[0].code;
-			var cardDraw1 = $('.playerBack > .cardContainer1:last .card');
-			var cardDraw2 = $('.playerBack > .cardContainer1:last .cardFront');
-			cardDraw1.animate({top: "-70px"}, "fast", function (){
-				cardDraw2.animate({top: "-70px"}, "fast", function(){
-					cardDraw1.addClass('flipped1');
-					cardDraw2.addClass('flipped2');
-					$('.playerBack > .cardContainer1:last img.cardFront.flipped2').css('z-index',200-$('.playerBack > .cardContainer1:last img.cardFront.flipped2').css('z-index'));
-					$('.playerBack > .cardContainer1:last img.cardFront.flipped1').css('z-index',200-$('.playerBack > .cardContainer1:last img.cardFront.flipped1').css('z-index'));
-					$('.playerFront').append($('.playerBack > .cardContainer1:last')[0].outerHTML); 
-					$('.playerBack > .cardContainer1:last').remove();
-					observer.onEvent("animate1Done", "");
-				});
+			var cardDraw1 = $('.game > .cardContainer1:last');
+			var cardFlipped1 = $('.game > .cardContainer1:last > .card');
+			var cardFlipped2 = $('.game > .cardContainer1:last > .cardFront');			
+			cardDraw1.animate({top: "60%", left: "43%"}, "fast", function (){
+				cardFlipped1.addClass('flipped1');
+				cardFlipped2.addClass('flipped2');
+				cardDraw1.addClass('played');
+				cardDraw1.removeClass('cardContainer1');
+				$('.game > .played').css('z-index',200-$('.game > .played').css('z-index'));
+				observer.onEvent("attackPlayer1Done", "");
 			});
 		});
 	});		
