@@ -46,6 +46,7 @@ body, html {
 	width: 60px;
 	border: 1px solid gray;
 	position: fixed;
+	transition-duration: 0.2s;
 	/*left: 50%;
 	top: 25%;*/
 }
@@ -55,45 +56,50 @@ body, html {
 	width: 60px;
 	border: 1px solid gray;
 	position: fixed;
+	transition-duration: 0.2s;
+	transition-delay: 0.2s;
+	transform: rotateY(90deg);
 /*	left: 50%;
 	top: 25%;*/
 }
 
 /*Animation Styles */
 
-.cardFront {
+/*.cardFront {
 	transform: rotateY(90deg);
-}
+}*/
 
 .flipped1 {
-	animation: flip 0.2s ease-in forwards;
+	transform: rotateY(90deg);
+	/*animation: flip 0.2s ease-in forwards;*/
 	/*left: 43%;*/
 	position: fixed;
 }
 
 .flipped2 {
-	animation: flip 0.2s 0.2s ease-in forwards reverse;
+	transform: rotateY(0deg);
+	/*animation: flip 0.2s 0.2s ease-in forwards reverse;*/
 	/*left: 43%;*/
 	position: fixed;
 }
 
-@keyframes flip {
+/*@keyframes flip {
 	0%{ transform: rotateY(0deg); }
 	100%{ transform: rotateY(90deg); }
-}
+}*/
 
-.reflip1 {
-	animation: reflip 0.2s ease-in forwards;
+/*.reflip1 {
+	animation: flip 0.2s ease-in forwards reverse;
 }
 
 .reflip2 {
-	animation: reflip 0.2s 0.2s ease-in forwards reverse;
-}
+	animation: flip 0.2s 0.2s ease-in forwards;
+}*/
 
-@keyframes reflip {
+/*@keyframes reflip {
 	0%{ transform: rotateY(90deg); }
 	100%{ transform: rotateY(0deg); }
-}
+}*/
 
 /* end */
 
@@ -127,16 +133,10 @@ body, html {
 	position: fixed;
 }
 
-.playerDiscard1 {
+.playerDiscard {
 	width: 60px;
 	height: 100px;
 	top: 0;
-	position: fixed;
-}
-
-.playerDiscard2 {
-	width: 60px;
-	height: 100px;
 	position: fixed;
 }
 
@@ -154,6 +154,10 @@ body, html {
 
 .played {
 	left: 50%;
+}
+
+.startOver {
+	z-index: 9001;
 }
 
 /*.playerBack {
