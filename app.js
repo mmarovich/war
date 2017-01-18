@@ -30,7 +30,6 @@ state = {
 	}
 }
 
-
 // API GET
 function getDataFromApi(url, callback){
 	$.getJSON(url, callback).fail(function(d) { 
@@ -138,13 +137,37 @@ function swapPiles(data){
 
 // This empties all state variables that accumulate card codes for
 // the API urls.
-function warDiscard(data){
+function warDiscard1(data){
 	swapPiles(data);
+	$('.played').delay(1000).animate({left: "10%", top: "75%"}, "fast", function(){
+		$('.played').css('z-index', 200-parseInt($('.played').css('z-index')));
+		$('.game').append($('.played'));
+		$('.played').addClass('playerDiscard');
+		$('.played').removeClass('played');
+		$('.attack').prop('disabled', false);
+	});
 	state.cards.drawn1 = [];
 	state.cards.drawn2 = [];
 	state.cards.currentCard1 = "";
 	state.cards.currentCard2 = "";
+	state.cards.wagerCards = "";
 	console.log(data);
+}
+
+function warDiscard2(data){
+	swapPiles(data);
+	$('.played').delay(1000).animate({left: "10%", top: "5%"}, "fast", function(){
+		$('.played').css('z-index', 200-parseInt($('.played').css('z-index')));
+		$('.game').append($('.played'));
+		$('.played').addClass('aiDiscard');
+		$('.played').removeClass('played');
+		$('.attack').prop('disabled', false);
+	});
+	state.cards.drawn1 = [];
+	state.cards.drawn2 = [];
+	state.cards.currentCard1 = "";
+	state.cards.currentCard2 = "";
+	state.cards.wagerCards = "";
 }
 
 // This generates words telling you whether you've won or lost.
@@ -170,6 +193,19 @@ function maxPlayed (){
 		} 
 	})
 	return currentMax + 1;
+}
+
+function playerScoring (data){
+	if (!data.piles.discard_1){
+		$('.playerScore').html((parseInt(data.piles.pile_1.remaining)));
+		$('.aiScore').html((parseInt(data.piles.pile_2.remaining) + parseInt(data.piles.discard_2.remaining)));
+	} else if (!data.piles.discard_2) {
+		$('.playerScore').html((parseInt(data.piles.pile_1.remaining) + parseInt(data.piles.discard_1.remaining)));
+		$('.aiScore').html((parseInt(data.piles.pile_2.remaining)));
+	} else {
+		$('.playerScore').html((parseInt(data.piles.pile_1.remaining) + parseInt(data.piles.discard_1.remaining)));
+		$('.aiScore').html((parseInt(data.piles.pile_2.remaining) + parseInt(data.piles.discard_2.remaining)));
+	}
 }
 
 $(document).ready(function(){
@@ -211,11 +247,11 @@ $(document).ready(function(){
 						'<img class="cardFront" src="' + data.cards[index].image + '" style="margin-left:' + ((index / 2) - 30) +
 						'px; margin-bottom:' + (index / 2) + 'px"></div>');
 				})
-				// $('.cardContainer1').appendTo('.playerBack');
 				state.urls.pile1 = 'https://deckofcardsapi.com/api/deck/' + 
 				state.cards.id + '/pile/pile_1/add/?cards=' + codeString;
 				getDataFromApi(state.urls.pile1, function(data){
 					state.cards.pile1 = data.piles.pile_1;
+					$('.playerScore').html("" + data.piles.pile_1.remaining + "");
 				})
 			})
 		};
@@ -230,11 +266,11 @@ $(document).ready(function(){
 						'<img class="cardFront" src="' + data.cards[index].image + '" style="margin-left:' + ((index / 2) - 30) +
 						'px; margin-bottom:' + (index / 2) + 'px"></div>');
 				});
-				// $('.cardContainer2').appendTo('.aiBack');
 				state.urls.pile2 = 'https://deckofcardsapi.com/api/deck/' + 
 				state.cards.id + '/pile/pile_2/add/?cards=' + codeString;
 				getDataFromApi(state.urls.pile2, function(data){
 					state.cards.pile2 = data.piles.pile_2;
+					$('.aiScore').html("" + data.piles.pile_1.remaining + "");
 				})
 			});
 		}
@@ -252,6 +288,9 @@ $(document).ready(function(){
 			cardDraw1.animate({top: "30%", left: "43%"}, "fast", function (){
 				cardFlipped1.addClass('flipped1');
 				cardFlipped2.addClass('flipped2');
+				setTimeout(function () {
+					  new Audio('audio/cardFlip.wav').play();
+					}, 150);
 				cardDraw1.addClass('played');
 				cardDraw1.removeClass('cardContainer2');
 				cardDraw1.css('z-index', maxPlayed());
@@ -270,25 +309,13 @@ $(document).ready(function(){
 			getDataFromApi(state.urls.discard1, function(data){
 				swapPiles(data);
 				endGame(data);
+				playerScoring(data);
 				$('.played').delay(1000).animate({left: "10%", top: "75%"}, "fast", function(){
-					// $('.playerFront > .cardContainer1 .card').animate({top: "0" , left: "30px"}, "fast", function(){
-					// 	$('.aiFront > .cardContainer2 .cardFront').delay(0).animate({top: "0", left: "30px"}, "fast", function(){
-					// 		$('.aiFront > .cardContainer2 .card').delay(0).animate({top: "0", left: "30px"}, "fast", function(){
-								// $('.playerDiscard').append($('.playerFront > .cardContainer1'));
-								// $('.playerDiscard').append($('.aiFront > .cardContainer2'));
-								// $('.playerDiscard').append($('.playerFront > .cardContainer2'));
-								// $('.playerDiscard').append($('.aiFront > .cardContainer1'));
-								// $('.game > .played').css('z-index',200-$('.game > .played').css('z-index'));
-								$('.played').css('z-index', 200-parseInt($('.played').css('z-index')));
-								$('.game').append($('.played'));
-								$('.played').addClass('playerDiscard');
-								$('.played').removeClass('played');
-								// $('.playerFront > .cardContainer1').remove();
-								// $('.playerFront > .cardContainer2').remove();
-								// $('.aiFront > .cardContainer1').remove();
-								// $('.aiFront > .cardContainer2').remove();
-								$('.attack').prop('disabled', false);
-
+					$('.played').css('z-index', 200-parseInt($('.played').css('z-index')));
+					$('.game').append($('.played'));
+					$('.played').addClass('playerDiscard');
+					$('.played').removeClass('played');
+					$('.attack').prop('disabled', false);
 				});
 				state.cards.wagerCards = "";
 				console.log("you won it");
@@ -298,24 +325,13 @@ $(document).ready(function(){
 			getDataFromApi(state.urls.discard2, function(data){
 				swapPiles(data);
 				endGame(data);
+				playerScoring(data);
 				$('.played').delay(1000).animate({left: "10%", top: "5%"}, "fast", function(){
-					// $('.playerFront > .cardContainer1 .card').animate({top: "0" , left: "30px"}, "fast", function(){
-					// 	$('.aiFront > .cardContainer2 .cardFront').delay(0).animate({top: "0", left: "30px"}, "fast", function(){
-					// 		$('.aiFront > .cardContainer2 .card').delay(0).animate({top: "0", left: "30px"}, "fast", function(){
-					// 			$('.aiDiscard').append($('.playerFront > .cardContainer1'));
-					// 			$('.aiDiscard').append($('.aiFront > .cardContainer2'));
-					// 			$('.aiDiscard').append($('.playerFront > .cardContainer2'));
-					// 			$('.aiDiscard').append($('.aiFront > .cardContainer1'));
-								// $('.game > .played').css('z-index',200-$('.game > .played').css('z-index'));
-								$('.played').css('z-index', 200-parseInt($('.played').css('z-index')));
-								$('.game').append($('.played'));
-								$('.played').addClass('aiDiscard');
-								$('.played').removeClass('played');
-								// $('.playerFront > .cardContainer1').remove();
-								// $('.playerFront > .cardContainer2').remove();
-								// $('.aiFront > .cardContainer1').remove();
-								// $('.aiFront > .cardContainer2').remove();
-								$('.attack').prop('disabled', false);
+					$('.played').css('z-index', 200-parseInt($('.played').css('z-index')));
+					$('.game').append($('.played'));
+					$('.played').addClass('aiDiscard');
+					$('.played').removeClass('played');
+					$('.attack').prop('disabled', false);
 				});
 				state.cards.wagerCards = "";
 				console.log("you lost it");
@@ -324,10 +340,19 @@ $(document).ready(function(){
 		} else {
 			console.log("it's a war!");
 			if (data.piles.discard_1 && data.piles.pile_1.remaining === 0 && data.piles.discard_1.remaining === 0){
-				getDataFromApi(state.urls.discard1, warDiscard)
+				getDataFromApi(state.urls.discard1, warDiscard1)
 				$('.attack').prop('disabled', false);
 			} else if (data.piles.discard_2 && data.piles.pile_2.remaining === 0 && data.piles.discard_2.remaining ===0){
-				getDataFromApi(state.urls.discard2, warDiscard)
+				getDataFromApi(state.urls.discard2, warDiscard2)
+				swapPiles(data);
+				$('.played').delay(1000).animate({left: "10%", top: "5%"}, "fast", function(){
+					$('.played').css('z-index', 200-parseInt($('.played').css('z-index')));
+					$('.game').append($('.played'));
+					$('.played').addClass('aiDiscard');
+					$('.played').removeClass('played');
+					$('.attack').prop('disabled', false);
+				});
+				state.cards.wagerCards = "";
 				$('.attack').prop('disabled', false);
 			} else {	
 				getDataFromApi(state.urls.war1, function(data){
@@ -343,6 +368,9 @@ $(document).ready(function(){
 						warDraw11.removeClass('cardContainer1');
 						cardFlipped1.addClass('flipped1');
 						cardFlipped2.addClass('flipped2');
+						setTimeout(function () {
+							  new Audio('audio/cardFlip.wav').play();
+							}, 150);
 						warDraw11.css('z-index', maxPlayed());
 						observer.onEvent("playerWager1Done", "");
 					})
@@ -365,6 +393,9 @@ $(document).ready(function(){
 				warDraw21.removeClass('cardContainer2');
 				cardFlipped1.addClass('flipped1');
 				cardFlipped2.addClass('flipped2');
+				setTimeout(function () {
+					  new Audio('audio/cardFlip.wav').play();
+					}, 150);
 				warDraw21.css('z-index', maxPlayed());
 				observer.onEvent("aiWager1Done", data);
 			});
@@ -373,10 +404,19 @@ $(document).ready(function(){
 			
 	function aiWager1Done(event, data){	
 		if (data.piles.discard_1 && data.piles.pile_1.remaining === 0 && data.piles.discard_1.remaining === 0){
-			getDataFromApi(state.urls.discard1, warDiscard)
+			getDataFromApi(state.urls.discard1, warDiscard1)
+			swapPiles(data);
+				$('.played').delay(1000).animate({left: "10%", top: "75%"}, "fast", function(){
+					$('.played').css('z-index', 200-parseInt($('.played').css('z-index')));
+					$('.game').append($('.played'));
+					$('.played').addClass('playerDiscard');
+					$('.played').removeClass('played');
+					$('.attack').prop('disabled', false);
+				});
+				state.cards.wagerCards = "";
 			$('.attack').prop('disabled', false);
 		} else if (data.piles.discard_2 && data.piles.pile_2.remaining === 0 && data.piles.discard_2.remaining ===0){
-			getDataFromApi(state.urls.discard2, warDiscard)
+			getDataFromApi(state.urls.discard2, warDiscard2)
 			$('.attack').prop('disabled', false);
 		} else {				
 			getDataFromApi(state.urls.war1, function(data){
@@ -387,11 +427,14 @@ $(document).ready(function(){
 				var cardFlipped1 = $('.game > .cardContainer1:last > .card');
 				var cardFlipped2 = $('.game > .cardContainer1:last > .cardFront');
 				cardFlipped2.attr("src", cardImage);
-				warDraw12.delay(500).animate({top: "45%", left: "20%"}, "fast", function (){
+				warDraw12.delay(500).animate({top: "45%", left: "16%"}, "fast", function (){
 					warDraw12.addClass('played');
 					warDraw12.removeClass('cardContainer1');
 					cardFlipped1.addClass('flipped1');
 					cardFlipped2.addClass('flipped2');
+					setTimeout(function () {
+					  new Audio('audio/cardFlip.wav').play();
+					}, 150);
 					warDraw12.css('z-index', maxPlayed());
 					observer.onEvent("playerWager2Done", "");
 				});
@@ -413,6 +456,9 @@ $(document).ready(function(){
 				warDraw22.removeClass('cardContainer2');
 				cardFlipped1.addClass('flipped1');
 				cardFlipped2.addClass('flipped2');
+				setTimeout(function () {
+					  new Audio('audio/cardFlip.wav').play();
+					}, 150);
 				warDraw22.css('z-index', maxPlayed());
 				observer.onEvent("aiWager2Done", data);
 			});
@@ -421,10 +467,10 @@ $(document).ready(function(){
 
 	function aiWager2Done(event, data){
 		if (data.piles.discard_1 && data.piles.pile_1.remaining === 0 && data.piles.discard_1.remaining === 0){
-			getDataFromApi(state.urls.discard1, warDiscard)
+			getDataFromApi(state.urls.discard1, warDiscard1)
 			$('.attack').prop('disabled', false);
 		} else if (data.piles.discard_2 && data.piles.pile_2.remaining === 0 && data.piles.discard_2.remaining ===0){
-			getDataFromApi(state.urls.discard2, warDiscard)
+			getDataFromApi(state.urls.discard2, warDiscard2)
 			$('.attack').prop('disabled', false);
 		} else {
 		// display drawn cards
@@ -459,9 +505,12 @@ $(document).ready(function(){
 			var cardFlipped1 = $('.game > .cardContainer1:last > .card');
 			var cardFlipped2 = $('.game > .cardContainer1:last > .cardFront');
 			cardFlipped2.attr("src", cardImage);	
-			cardDraw1.animate({top: "60%", left: "43%"}, "fast", function (){
+			cardDraw1.animate({top: "55%", left: "43%"}, "fast", function (){
 				cardFlipped1.addClass('flipped1');
 				cardFlipped2.addClass('flipped2');
+				setTimeout(function () {
+					  new Audio('audio/cardFlip.wav').play();
+					}, 150);
 				cardDraw1.addClass('played');
 				cardDraw1.removeClass('cardContainer1');
 				cardDraw1.css('z-index', maxPlayed());
