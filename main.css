@@ -179,6 +179,21 @@ h1 {
 	font-size: 100px;
 }
 
+input {
+	position: fixed;
+	z-index: 200;
+	top: 40%;
+	left: 38%;
+	margin-left: -20px;
+	height: 60px;
+	width: 160px;
+	box-shadow: -5px -5px 3px black;
+	font-size: 30px;
+	color: gray;
+	background-color: darkred;
+	border-color: black;
+}
+
 @media only screen and (min-width: 640px) {
 	.card {
 		height: 150px;
