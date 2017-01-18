@@ -215,6 +215,19 @@ $(document).ready(function(){
     });
 
 	$('.shuffle').click(function(e){
+		$('.shuffle').css({
+			'border-radius': '50%', 
+			'box-shadow': '1px 1px 1px black', 
+			'height': '0', 
+			'width': '0',
+			'padding': '0',
+			'font-size': '0',
+			'background-color': 'red',
+			'top': '50%',
+			'left': '50%'});
+		$('.background').css({
+			'transform': 'scale(3)'
+		})
 
 // API shuffles the cards. Deck ID is stored in the state and 
 // used for future callbacks. Each player draws half the deck and 
@@ -224,7 +237,7 @@ $(document).ready(function(){
 			state.urls.draw = 'https://deckofcardsapi.com/api/deck/' + state.cards.id + '/draw/?count=26';
 		drawToPile1();
 		drawToPile2();
-		$('.shuffle').addClass('hidden');
+		// $('.shuffle').addClass('hidden');
 		$('.attack').removeClass('hidden');
 		state.urls.drawIt1 = "pile_1";
 		state.urls.drawIt2 = "pile_2";
@@ -311,11 +324,12 @@ $(document).ready(function(){
 				endGame(data);
 				playerScoring(data);
 				$('.played').delay(1000).animate({left: "10%", top: "75%"}, "fast", function(){
-					$('.played').css('z-index', 200-parseInt($('.played').css('z-index')));
+					$('.played').css('z-index', (parseInt($('.playerDiscard:last').css('z-index')) + 1));
 					$('.game').append($('.played'));
 					$('.played').addClass('playerDiscard');
 					$('.played').removeClass('played');
 					$('.attack').prop('disabled', false);
+
 				});
 				state.cards.wagerCards = "";
 				console.log("you won it");
@@ -327,7 +341,7 @@ $(document).ready(function(){
 				endGame(data);
 				playerScoring(data);
 				$('.played').delay(1000).animate({left: "10%", top: "5%"}, "fast", function(){
-					$('.played').css('z-index', 200-parseInt($('.played').css('z-index')));
+					$('.played').css('z-index', (parseInt($('.aiDiscard:last').css('z-index')) + 1));
 					$('.game').append($('.played'));
 					$('.played').addClass('aiDiscard');
 					$('.played').removeClass('played');

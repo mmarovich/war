@@ -4,12 +4,20 @@
 
 body, html {
 	margin: 0;
-	background-image: url("image/backGround.jpg");
+}
 
+.background {
+	z-index: -200;
+	position: fixed;
+	/*top: 0;
+	left: 0;*/
+	height: 100%;
+	width: 100%;
+	transition: 5s;
 }
 
 .game{
-	min-width: 100%;
+	width: 100%;
 	height: 100%;
 	position: fixed;
 	top: 0;
@@ -83,9 +91,24 @@ body, html {
 .attack {
 	position: fixed;
 	z-index: 200;
-	bottom: 2%;
-	left: 50%;
+	bottom: 0;
+	left: 38%;
 	margin-left: -20px;
+	height: 60px;
+	width: 160px;
+	box-shadow: -5px -5px 3px black;
+	font-size: 30px;
+	color: gray;
+	background-color: darkred;
+	border-color: black;
+}
+
+.attack:active {
+	bottom: 5px;
+	left: 37.5%;
+	height: 60px;
+	width: 160px;
+	box-shadow: 0px 0px 0px black;
 }
 
 .played {
@@ -111,8 +134,22 @@ h1 {
 
 .shuffle {
 	position: fixed;
-	top: 40%;
-	left: 40%;
+	top: 20%;
+	left: 20%;
+	font-size: 55px;
+	height: 60%;
+	width: 60%;
+	color: pink;
+	background-color: blue;
+	border: none;
+	border-radius: 5%;
+	box-shadow: 1000px 1000px 1000px black;
+	transition: 5s;
+	z-index: 9001;
+}
+
+.shuffle:focus{
+	outline: none;
 }
 
 .youWin {
@@ -151,5 +188,41 @@ h1 {
 .cardFront {
 	height: 150px;
 	width: 100px;
-	}
+}
+
+.attack {
+	position: fixed;
+	z-index: 200;
+	bottom: 0;
+	left: 38%;
+	margin-left: -20px;
+	height: 60px;
+	width: 160px;
+	box-shadow: -10px -10px 5px black;
+	transition: 1s;
+}
+
+.attack:hover {
+	height: 70px;
+	width: 170px;
+	box-shadow: 5px -5px 5px black;
+	font-size: 40px;
+	color: maroon;
+	background-color: darkred;
+	transition: 1s;
+	border-color: black;
+}
+
+.attack:active:after {
+	bottom: 5px;
+	left: 38.5%;
+	transition: 0s;
+	box-shadow: 0px 0px 0px black;
+	border-color: black;
+}
+
+.attack:focus {
+	outline: none;
+}
+
 }
