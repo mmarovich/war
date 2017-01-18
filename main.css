@@ -224,11 +224,10 @@ input {
 	font-size: 40px;
 	color: maroon;
 	background-color: darkred;
-	transition: 1s;
 	border-color: black;
 }
 
-.attack:active:after {
+.attack:active {
 	bottom: 5px;
 	left: 38.5%;
 	transition: 0s;
