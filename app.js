@@ -33,7 +33,6 @@ state = {
 // API GET
 function getDataFromApi(url, callback){
 	$.getJSON(url, callback).fail(function(d) { 
-		console.log("error"); 
 	});
 }
 
@@ -151,7 +150,6 @@ function warDiscard1(data){
 	state.cards.currentCard1 = "";
 	state.cards.currentCard2 = "";
 	state.cards.wagerCards = "";
-	console.log(data);
 }
 
 function warDiscard2(data){
@@ -245,12 +243,12 @@ $(document).ready(function(){
 		state.urls.discardIt2 = "discard_2";
 		});
 
-// Uses the API to draw 26 cards (have the deck). In
+// Uses the API to draw 26 cards (half the deck). In
 // order to specify which cards go into each player's pile, it's 
-// necessary to grab the code of each card, to tell the 
+// necessary to grab the code of each card.  Normally when this is done
+// it's necessary in order to construct parameters for URLs.
 		function drawToPile1(){
 			getDataFromApi(state.urls.draw, function(data){
-				console.log(data);
 				var codeString = data.cards.map(function(card){
 					return card.code;
 				}).join();
@@ -289,6 +287,13 @@ $(document).ready(function(){
 		}
 	});
 
+// The first attack was done on line 513.  Event listeners were used to control
+// the flow of AJAX async.  Each step along the way includes its own set of
+// animations.  Most elements on the viewport are fixed, and use percentage
+// positioning in order to be more responsive across devices.
+
+// AI attacks:
+
 	function attackPlayer1Done(event){
 		getDataFromApi(state.urls.attack2, function(data){
 			state.cards.currentVal2 = cardValue(data.cards[0].value);
@@ -313,6 +318,8 @@ $(document).ready(function(){
 		});
 	}
 
+// Determines what happens when you win a round:
+
 	function attackPlayer2Done(event, data){
 		state.urls.discard1 = 'https://deckofcardsapi.com/api/deck/' + state.cards.id + '/pile/' + state.urls.discardIt1 + '/add/?cards=' + state.cards.currentCard1 + ',' + state.cards.currentCard2 + "," + state.cards.wagerCards;
 		state.urls.discard2 = 'https://deckofcardsapi.com/api/deck/' + state.cards.id + '/pile/' + state.urls.discardIt2 + '/add/?cards=' + state.cards.currentCard1 + ',' + state.cards.currentCard2 + "," + state.cards.wagerCards;
@@ -332,9 +339,9 @@ $(document).ready(function(){
 
 				});
 				state.cards.wagerCards = "";
-				console.log("you won it");
-				console.log(data);
 			})
+
+// determines what happens when the AI wins a round:
 		} else if (state.cards.currentVal1 < state.cards.currentVal2) {
 			getDataFromApi(state.urls.discard2, function(data){
 				swapPiles(data);
@@ -348,11 +355,16 @@ $(document).ready(function(){
 					$('.attack').prop('disabled', false);
 				});
 				state.cards.wagerCards = "";
-				console.log("you lost it");
-				console.log(data)
 			})
+
+// determines what happens in the event of a tie.  Two cards are wagered and all cards
+// state in the pot until the next attack.
+
+// many variables are considered.  Variables need to be swapped in case piles get to 0.
+// If a war happens and a player runs completely out of cards, they win the pot immediately.
+
+// event control:
 		} else {
-			console.log("it's a war!");
 			if (data.piles.discard_1 && data.piles.pile_1.remaining === 0 && data.piles.discard_1.remaining === 0){
 				getDataFromApi(state.urls.discard1, warDiscard1)
 				$('.attack').prop('disabled', false);
@@ -368,6 +380,8 @@ $(document).ready(function(){
 				});
 				state.cards.wagerCards = "";
 				$('.attack').prop('disabled', false);
+
+// player wagers first card:
 			} else {	
 				getDataFromApi(state.urls.war1, function(data){
 					state.cards.drawn1.push(data.cards[0].code);
@@ -393,6 +407,7 @@ $(document).ready(function(){
 		}
 	}
 
+// AI wagers first card:
 	function playerWager1Done(event, data){
 		getDataFromApi(state.urls.war2, function(data){
 			state.cards.drawn2.push(data.cards[0].code);
@@ -416,6 +431,7 @@ $(document).ready(function(){
 		});
 	}
 			
+// event control:
 	function aiWager1Done(event, data){	
 		if (data.piles.discard_1 && data.piles.pile_1.remaining === 0 && data.piles.discard_1.remaining === 0){
 			getDataFromApi(state.urls.discard1, warDiscard1)
@@ -432,7 +448,9 @@ $(document).ready(function(){
 		} else if (data.piles.discard_2 && data.piles.pile_2.remaining === 0 && data.piles.discard_2.remaining ===0){
 			getDataFromApi(state.urls.discard2, warDiscard2)
 			$('.attack').prop('disabled', false);
-		} else {				
+		} else {
+
+// player wagers second card:				
 			getDataFromApi(state.urls.war1, function(data){
 				state.cards.drawn1.push(data.cards[0].code);
 				swapPiles(data);
@@ -456,6 +474,7 @@ $(document).ready(function(){
 		}
 	}
 
+// AI wagers second card:
 	function playerWager2Done(event, data){
 		getDataFromApi(state.urls.war2, function(data){
 			state.cards.drawn2.push(data.cards[0].code);
@@ -479,6 +498,7 @@ $(document).ready(function(){
 		});
 	}
 
+// event control:
 	function aiWager2Done(event, data){
 		if (data.piles.discard_1 && data.piles.pile_1.remaining === 0 && data.piles.discard_1.remaining === 0){
 			getDataFromApi(state.urls.discard1, warDiscard1)
@@ -487,17 +507,18 @@ $(document).ready(function(){
 			getDataFromApi(state.urls.discard2, warDiscard2)
 			$('.attack').prop('disabled', false);
 		} else {
-		// display drawn cards
+		
+// all state variables need to be purged
 		state.cards.wagerCards += (state.cards.wagerCards.length > 0 ? "," : "") + state.cards.currentCard1 + "," + state.cards.currentCard2 + "," + state.cards.drawn1.join() + "," + state.cards.drawn2.join();
 		state.cards.drawn1 = [];
 		state.cards.drawn2 = [];
 		state.cards.currentCard1 = "";
 		state.cards.currentCard2 = "";
 		$('.attack').prop('disabled', false);
-		console.log(state.cards.wagerCards);
 		}
 	}
 
+// event listeners, joined at the hip with line 42.
 	observer.addEventListener("attackPlayer2Done", attackPlayer2Done);
 	observer.addEventListener("attackPlayer1Done", attackPlayer1Done);
 	observer.addEventListener("playerWager1Done", playerWager1Done);
