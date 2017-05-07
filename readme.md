@@ -3,7 +3,7 @@
 How to play "War: The Card Game"
 	Each player takes half the deck and plays one card from the top of their deck.  Whoever is highest wins both cards.  In the event of a tie, two cards are wagered for the next round.  First player to win the entire deck wins.
 
-This app was written using HTML, CSS, Javascript, Jquery, and AJAX. The API used is here: [Deck of Cards](https://deckofcardsapi.com/).  It is also a very good example of CSS animations.
+This app was written using HTML, CSS, Javascript, Jquery, and AJAX, and is also a very good example of CSS animations. The API used is here: [Deck of Cards](https://deckofcardsapi.com/).
 
 The API uses a virtual deck of cards, which can be manipulated through various paths and parameters.  Every url generated in the javascript code has a "Deck ID" so that the API can keep track of which cards are being manipulated.
 
